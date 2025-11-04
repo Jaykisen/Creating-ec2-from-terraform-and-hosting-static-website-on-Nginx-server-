@@ -12,14 +12,16 @@ provider "aws" {
   region = var.aws_region
 }
 
+# 🔐 Create SSH key pair
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
   public_key = var.public_key
 }
 
+# 🌐 Create Security Group
 resource "aws_security_group" "web_sg" {
   name_prefix = "web-sg"
-  description = "Allow HTTP and SSH"
+  description = "Allow SSH and HTTP"
 
   ingress {
     from_port   = 22
@@ -43,6 +45,7 @@ resource "aws_security_group" "web_sg" {
   }
 }
 
+# 💻 EC2 Instance with Nginx and Default Page
 resource "aws_instance" "web" {
   ami           = var.ami_id
   instance_type = var.instance_type
@@ -55,16 +58,13 @@ resource "aws_instance" "web" {
               apt install nginx -y
               systemctl start nginx
               systemctl enable nginx
-              
-              # Copy website files
-              mkdir -p /var/www/html/
-              cat <<'EOT' > /var/www/html/index.html
-              ${file("website/index.html")}
-              EOT
+              echo "<h1>Welcome to Jaykisen's Terraform EC2 🚀</h1>" > /var/www/html/index.html
               EOF
 
   tags = {
-    Name = "Terraform-Nginx"
+    Name = "Terraform-Nginx-Server"
   }
+}
+
 
 
