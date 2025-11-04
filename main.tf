@@ -66,9 +66,5 @@ resource "aws_instance" "web" {
   tags = {
     Name = "Terraform-Nginx"
   }
-}
 
-output "public_ip" {
-  value = aws_instance.web.public_ip
-}
 
